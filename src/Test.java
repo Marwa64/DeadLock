@@ -41,7 +41,12 @@ public class Test {
 		}
 		ResourceManager banker = new ResourceManager(processes, resources, available, allocated, maximum);
 		
-		banker.printData();
+		if (banker.safeState(true)) {
+			System.out.println("The system is in a safe state\n");
+		} else {
+			System.out.println("The system is not in a safe state\n");
+			System.exit(0);
+		}
 		
 		String operation;
 		int [] resourcesInput = new int [resources];
@@ -65,7 +70,7 @@ public class Test {
 				}
 			}
 			System.out.println("\n---------------------------------------\n");
-		} while (operation != "quit");
+		} while (!operation.equalsIgnoreCase("quit"));
 		sc.close();
 	}
 

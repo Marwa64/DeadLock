@@ -21,11 +21,7 @@ public class ResourceManager {
 			}
 		}
 		
-		if (safeState()) {
-			System.out.println("The system is in a safe state\n");
-		} else {
-			System.out.println("The system is not in a safe state\n");
-		}
+		printData();
 	}
 	
 	public void printData() {
@@ -84,8 +80,9 @@ public class ResourceManager {
 			allocated[process][i] += resources[i];
 		}
 		
-		if (safeState()) {
+		if (safeState(false)) {
 			System.out.println("This request is safe, resources have been allocated\n");
+			printData();
 		} else {
 			for (int i = 0; i < r; i++) {
 				available[i] += resources[i];
@@ -97,31 +94,40 @@ public class ResourceManager {
 		
 	}
 	
-	boolean checkResources(int process) {
+	boolean checkResources(int process, int [] work) {
 		for (int j = 0; j < r; j++) {
-			if (need[process][j] > available[j]) {
+			if (need[process][j] > work[j]) {
 				return false;
 			}
 		}
 		return true;
 	}
 	
-	boolean safeState() {
-		int [] work = this.available;
+	public boolean safeState(boolean beginning) {
+		int [] work = new int[r];
+		for (int i = 0; i < r; i++) {
+			work[i] = available[i];
+		}
+		
 		boolean [] finish = new boolean [p];
 		for (int i = 0; i < p; i++) {
 			finish[i] = false;
 		}
 		
 		for (int i = 0; i < p; i++) {
-			if (finish[i] == false && checkResources(i)) {
+			if (finish[i] == false && beginning) System.out.println();
+			if (finish[i] == false && checkResources(i, work)) {
+				if (beginning) System.out.print("Process: #" + i + " : ");
 				for (int j = 0; j < r; j++) {
 					work[j] += allocated[i][j];
+					if (beginning) System.out.print(work[j] + "  ");
 				}
 				finish[i] = true;
-				i = 0;
+				i = -1;
 			}
 		}
+		
+		System.out.println();
 		
 		for (int i = 0; i < p; i++) {
 			if (finish[i] == false)
@@ -142,5 +148,6 @@ public class ResourceManager {
 			available[i] += resources[i];
 		}
 		System.out.println("\nResources have been released\n");
+		printData();
 	}
 }
