@@ -20,6 +20,12 @@ public class ResourceManager {
 				need[i][j] = max[i][j] - allocated[i][j];
 			}
 		}
+		
+		if (safeState()) {
+			System.out.println("The system is in a safe state\n");
+		} else {
+			System.out.println("The system is not in a safe state\n");
+		}
 	}
 	
 	public void printData() {
